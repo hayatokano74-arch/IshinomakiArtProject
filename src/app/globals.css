@@ -1,1 +1,792 @@
+/* ========================================
+   ISHINOMAKI ART PROJECT — v4
+   Gallery-White × Color Blocks × Editorial
+   Inspired by THE GUND aesthetic
+   ======================================== */
+
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f6f5f3;
+  --fg: #111111;
+  --fg-dim: #555555;
+  --muted: #999999;
+  --line: #e5e5e5;
+  --line-strong: #d0d0d0;
+
+  /* アクセントカラーブロック */
+  --color-yellow: #f5d547;
+  --color-magenta: #d94cf5;
+  --color-blue: #5b8def;
+  --color-green: #4ecb71;
+  --color-orange: #f09a4e;
+  --color-pink: #f27e9f;
+
+  --font-serif: 'Instrument Serif', 'Noto Serif JP', serif;
+  --font-sans: 'Space Grotesk', var(--font-jp, sans-serif), 'Hiragino Sans', sans-serif;
+
+  --pad: clamp(16px, 4vw, 48px);
+  --max-w: 1200px;
+  --radius: 0px;
+  --radius-pill: 100px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 300ms;
+}
+
+/* ── リセット ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 0.85rem + 0.15vw, 15px);
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+  overflow-x: hidden;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+ul {
+  list-style: none;
+}
+::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* ── シェル ── */
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.wrap {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+/* ==============================
+   ヘッダー — THE GUND 風
+   ============================== */
+.hdr {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.hdr-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: clamp(14px, 2vw, 20px) var(--pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hdr-logo {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.hdr-r {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 28px);
+}
+
+.hdr-nav {
+  display: flex;
+  gap: clamp(16px, 2vw, 28px);
+}
+.hdr-nav a {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
+  transition: color var(--dur);
+}
+.hdr-nav a:hover {
+  color: var(--fg);
+}
+
+.hdr-dots {
+  display: flex;
+  gap: 4px;
+}
+.hdr-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--fg);
+}
+
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+  cursor: pointer;
+}
+.burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--fg);
+  transition:
+    transform var(--dur) var(--ease),
+    opacity 200ms;
+}
+.burger.on span:nth-child(1) {
+  transform: rotate(45deg) translate(4.5px, 4.5px);
+}
+.burger.on span:nth-child(2) {
+  opacity: 0;
+}
+.burger.on span:nth-child(3) {
+  transform: rotate(-45deg) translate(4.5px, -4.5px);
+}
+
+.mob-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 5vh, 40px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms var(--ease);
+}
+.mob-nav.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mob-nav a {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 6vw, 40px);
+  color: var(--fg);
+}
+
+/* ==============================
+   ヒーロー — ギャラリー看板風
+   ============================== */
+.hero-gallery {
+  border-bottom: 1px solid var(--line);
+  padding: clamp(48px, 8vw, 120px) var(--pad) clamp(40px, 6vw, 80px);
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vw, 36px);
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(48px, 8vw + 1rem, 120px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.hero-title i {
+  font-style: italic;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 24px);
+  flex-wrap: wrap;
+}
+
+.hero-tag {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  border: 1px solid var(--line-strong);
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+}
+
+.hero-desc {
+  font-size: clamp(14px, 1vw, 16px);
+  color: var(--fg-dim);
+  max-width: 500px;
+  line-height: 1.7;
+}
+
+/* ヒーローイメージ — フルブリード */
+.hero-img-wrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-img {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  background-size: cover;
+  background-position: center 35%;
+  transition: transform 8s ease-out;
+}
+
+.hero-img-wrap:hover .hero-img {
+  transform: scale(1.02);
+}
+
+/* ==============================
+   フィルターバー
+   ============================== */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(12px, 1.5vw, 16px) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.filter-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-btn {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--line-strong);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    background var(--dur),
+    border-color var(--dur);
+}
+.filter-btn:hover {
+  background: var(--bg-soft);
+}
+.filter-btn::after {
+  content: '↓';
+  font-size: 10px;
+}
+
+.filter-count {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ==============================
+   イベントカード — THE GUND 風
+   ============================== */
+.event-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.event-card {
+  display: grid;
+  grid-template-columns: clamp(120px, 18vw, 240px) 1fr;
+  border-bottom: 1px solid var(--line);
+  transition: background var(--dur);
+  cursor: pointer;
+  min-height: clamp(120px, 16vw, 200px);
+}
+
+.event-card:hover {
+  background: var(--bg-soft);
+}
+
+/* 画像またはカラーブロック */
+.event-visual {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-visual-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 500ms var(--ease);
+}
+
+.event-card:hover .event-visual-img {
+  transform: scale(1.06);
+}
+
+/* カラーブロック + 日付 */
+.event-visual-color {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: clamp(12px, 1.5vw, 20px);
+}
+
+.event-visual-date {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--fg);
+}
+
+/* カード右側テキスト */
+.event-info {
+  padding: clamp(16px, 2vw, 28px) clamp(16px, 2.5vw, 32px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.event-type {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.event-date-text {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.event-name {
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 400;
+  line-height: 1.25;
+  margin-top: 4px;
+}
+
+/* ==============================
+   セクション
+   ============================== */
+.sec {
+  padding: clamp(48px, 6vw, 96px) 0;
+}
+
+.sec-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: clamp(20px, 3vw, 36px);
+  padding-bottom: clamp(12px, 1.5vw, 20px);
+  border-bottom: 1px solid var(--line);
+}
+
+.sec-label {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.sec-more {
+  font-size: 12px;
+  color: var(--fg-dim);
+  border: 1px solid var(--line-strong);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  transition:
+    background var(--dur),
+    color var(--dur);
+  white-space: nowrap;
+}
+.sec-more:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* ==============================
+   ニュース — ミニマルリスト
+   ============================== */
+.news-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: clamp(12px, 2vw, 24px);
+  align-items: center;
+  padding: clamp(12px, 1.5vw, 16px) 0;
+  border-bottom: 1px solid var(--line);
+  transition: padding-left var(--dur) var(--ease);
+  cursor: pointer;
+}
+.news-row:hover {
+  padding-left: 12px;
+}
+
+.news-d {
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.news-t {
+  font-size: clamp(13px, 0.9vw, 15px);
+}
+
+.news-c {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  border: 1px solid var(--line);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+/* ==============================
+   アーカイブ — 横スクロール
+   ============================== */
+.archive-scroll {
+  margin: 0 calc(-1 * var(--pad));
+  padding: 0 var(--pad);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.archive-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.archive-track {
+  display: flex;
+  gap: clamp(12px, 1.5vw, 20px);
+  width: max-content;
+  padding-right: var(--pad);
+}
+
+.archive-item {
+  width: clamp(220px, 18vw, 280px);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.archive-item-img {
+  aspect-ratio: 3 / 4;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bg-soft);
+  margin-bottom: clamp(10px, 1.2vw, 14px);
+  overflow: hidden;
+}
+
+.archive-item-img > div {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 500ms var(--ease);
+}
+
+.archive-item:hover .archive-item-img > div {
+  transform: scale(1.05);
+}
+
+.archive-item-cat {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.archive-item-title {
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.archive-item-date {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: clamp(16px, 2vw, 28px);
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.scroll-cue-bar {
+  width: 40px;
+  height: 1px;
+  background: var(--line-strong);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-cue-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--fg);
+  animation: cueSlide 2.5s ease-in-out infinite;
+}
+@keyframes cueSlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ==============================
+   About — 写真 + テキスト
+   ============================== */
+.about-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+
+.about-img {
+  aspect-ratio: 4 / 5;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bg-soft);
+}
+
+.about-txt {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 28px);
+}
+
+.about-lead {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.5vw, 36px);
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.about-p {
+  font-size: clamp(13px, 0.9vw, 15px);
+  color: var(--fg-dim);
+  line-height: 1.9;
+}
+
+.about-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--line-strong);
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  transition:
+    background var(--dur),
+    color var(--dur),
+    gap var(--dur);
+  width: fit-content;
+}
+.about-btn:hover {
+  background: var(--fg);
+  color: var(--bg);
+  gap: 14px;
+}
+.about-btn::after {
+  content: '→';
+}
+
+/* ==============================
+   フッター
+   ============================== */
+.ftr {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding: clamp(40px, 5vw, 72px) var(--pad) clamp(20px, 2vw, 32px);
+}
+
+.ftr-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.ftr-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: clamp(24px, 4vw, 48px);
+  margin-bottom: clamp(36px, 4vw, 56px);
+}
+
+.ftr-brand {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.ftr-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 280px;
+}
+
+.ftr-cols {
+  display: flex;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+.ftr-col h5 {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+.ftr-col ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ftr-col a {
+  font-size: 12px;
+  color: var(--fg-dim);
+  transition: color var(--dur);
+}
+.ftr-col a:hover {
+  color: var(--fg);
+}
+
+.ftr-bot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: clamp(12px, 1.5vw, 20px);
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* ==============================
+   フェードイン
+   ============================== */
+.rv {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.6s var(--ease);
+}
+.rv.vis {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==============================
+   レスポンシブ
+   ============================== */
+@media (max-width: 900px) {
+  .hdr-nav {
+    display: none;
+  }
+  .burger {
+    display: flex;
+  }
+
+  .event-card {
+    grid-template-columns: clamp(100px, 30vw, 140px) 1fr;
+    min-height: clamp(100px, 28vw, 140px);
+  }
+
+  .about-split {
+    grid-template-columns: 1fr;
+  }
+
+  .sec-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .ftr-top {
+    flex-direction: column;
+  }
+  .ftr-cols {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .ftr-bot {
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .news-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .news-c {
+    justify-self: start;
+  }
+  .hero-title {
+    font-size: clamp(36px, 12vw, 56px);
+  }
+}
+
+/* スクロールバー */
+body::-webkit-scrollbar {
+  width: 3px;
+}
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+body::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 2px;
+}
